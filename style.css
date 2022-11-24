@@ -1,14 +1,17 @@
-body{
-    margin:0;
+body {
+    margin: 0;
     padding: 0;
 }
 
-.content{
-    margin:0;
+.content {
+    margin: 0;
     padding: 0;
 }
 
-header{
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +19,7 @@ header{
 
 }
 
-.logo_header img{
+.logo_header img {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -24,59 +27,64 @@ header{
 }
 
 
-.nav{
+.nav {
     list-style-type: none;
     padding-left: 0;
 
 }
 
 
-.nav-link{
+.nav-link {
     font-family: 'Inter', sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
     line-height: 15px;
-    color: rgba(245, 245, 247, 0.92);
+    color: rgba(210, 210, 230, 0.92);
     text-decoration: none;
+    transition: color 0.3s;
 }
 
-.main{
+.nav-link:hover {
+    color: rgba(245, 245, 247, 0.92);
+}
+
+.main_content {
     padding-left: 3%;
     padding-right: 3%;
     display: grid;
     grid-template-columns:40vw 10vw 38vw;
-    grid-template-row:auto auto;
-    background: #F5F5F5;
+    grid-template-row: auto auto;
     padding-top: 5rem;
     padding-bottom: 5rem;
     display: grid;
     align-items: center;
+    background: #FBFBFD;
+
 }
 
 .main_content_img {
     width: 100%;
     margin-left: 15%;
-    grid-column-start:1;
-    grid-column-end:3;
-    grid-row-start:1;
-    grid-row-end:3;
-}
-
-.main_content_img img{
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-}
-
-
-
-.main_content_text{
-    padding-top:10%;
+    grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 1;
-    grid-row-end:2;
-    grid-column-start:2;
-    grid-column-end:4;
+    grid-row-end: 3;
+}
+
+.main_content_img img {
+    width: 100%;
+    height: 85vh;
+    object-fit: fill
+}
+
+
+.main_content_text {
+    padding-top: 10%;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 2;
+    grid-column-end: 4;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -84,17 +92,18 @@ header{
     width: 100%;
 }
 
-.main_content_text h1{
+.main_content_text h3 {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 700;
-    font-size:56px;
+    font-size: 56px;
     line-height: 68px;
     color: #000000;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 }
-.main_content_text p{
+
+.main_content_text p {
     text-align: center;
     font-family: 'Inter', sans-serif;
     font-style: normal;
@@ -103,8 +112,10 @@ header{
     line-height: 34px;
     color: #000000;
     margin-top: 0;
+    margin-bottom: 16px;
 }
-.main_content_text a{
+
+.main_content_text a {
     font-family: 'Inter', sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -114,63 +125,63 @@ header{
     text-decoration: none;
     text-align: center;
 }
+
 .main_content_text a:hover {
-    animation-name: order;
-    animation-duration: 250ms;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
+    text-decoration: underline;
+    text-decoration-color: #0066CC;
 }
 
-@keyframes order {
-    25%{
-        border-bottom: 0.5px dotted #0066CC;
-    }
-    50% {
-        border-bottom: 1px dotted #0066CC;
-    }
-    50% {
-        border-bottom: 1.5px dotted #0066CC;
-    }
-    100% {
-        border-bottom: 2px solid #0066CC;
-    }
+hr{
+    margin:0;
+    border:solid 1px #333333;
+    background: #FBFBFD;
 }
 
-footer{
-    background:#333333;
+footer {
+    background: #333333;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
 
-
-@media(max-width: 1350px){
-    .nav{
+@media (max-width: 1440px) {
+    .nav {
         text-align: center;
         width: 20%;
         padding: 0 10px 0 10px;
     }
-    .main{
+
+    .main_content {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding:40px 0 40px 0;
+        padding: 20px 0 20px 0;
     }
 
-    .main_content_img{
-        height: 50vh;
+    .main_content_img img {
+        height: 40vh;
+    }
+
+    .main_content_img {
         margin: 0;
     }
-    .main_content_text h1{
-        font-size:25px;
+
+    .main_content_text {
+        padding-top: 5%;
+    }
+
+    .main_content_text h3 {
+        font-size: 25px;
         margin: 0;
         line-height: 30px;
     }
-    .main_content_text p{
+
+    .main_content_text p {
         font-size: medium;
         margin-bottom: 0;
     }
-    .main_content_text a{
+
+    .main_content_text a {
         font-size: medium;
     }
 }

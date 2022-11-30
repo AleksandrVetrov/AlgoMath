@@ -22,10 +22,16 @@ public class UserService implements UserDetailsService {
     @PersistenceContext
     private EntityManager em;
     @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     UserRepository userRepository;
-    @Autowired
+
     RoleRepository roleRepository;
-    @Autowired
+
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override

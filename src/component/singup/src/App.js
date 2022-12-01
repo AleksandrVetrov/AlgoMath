@@ -21,7 +21,6 @@ class App extends React.Component {
     }
 
     submitCheckIn = event => {
-        event.preventDefault();
         if (!validator.isEmail(this.state.email)) {
             alert("Вы не ввели почту")
         } else if (!validator.isStrongPassword(this.state.password1, {minlength: 8})) {
@@ -31,6 +30,7 @@ class App extends React.Component {
         } else {
             alert("Успешно")
         }
+        event.preventDefault();
     }
 
     onNameChange(event) {

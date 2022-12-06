@@ -12,27 +12,29 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService implements EmailSender {
-    @Autowired
-    private JavaMailSender mailSender;
+
+    private JavaMailSender emailSender;
 
     @Value ("${spring.mail.username}")
-    private String emailSender;
-
-    public EmailService(){}
+    private String sender;
+    @Autowired
+    public EmailService(JavaMailSender emailSender){
+        this.emailSender = emailSender;
+    }
 
     @Override
     @Async
-    public void send(String emailReceiver, String subject ,String message){
+    public void send(String receiver, String subject ,String message){
         try{
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
-            mimeMessageHelper.setFrom(emailSender);
-            mimeMessageHelper.setTo(emailReceiver);
+            mimeMessageHelper.setFrom(sender);
+            mimeMessageHelper.setTo(receiver);
             mimeMessageHelper.setSubject(subject);
             mimeMessageHelper.setText(message);
 
-            mailSender.send(mimeMessage);
+            emailSender.send(mimeMessage);
         } catch(MessagingException ex) {
             throw new IllegalStateException("failed to send message");
         }

@@ -1,6 +1,6 @@
 package com.boots.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")

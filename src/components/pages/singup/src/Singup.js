@@ -3,6 +3,7 @@ import './Singup.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import validator from 'validator';
+import Helmet from "react-helmet";
 
 class Singup extends React.Component {
     constructor(props) {
@@ -23,12 +24,25 @@ class Singup extends React.Component {
     submitCheckIn = event => {
         if (!validator.isEmail(this.state.email)) {
             alert("Вы не ввели почту")
-        } else if (!validator.isStrongPassword(this.state.password1, {minlength: 8})) {
+        } /*else if (!validator.isStrongPassword(this.state.password1, {minlength: 8})) {
             alert("Длина пароля не менее 8 символов.Пароль должен содержать строчные,прописные буквы и цифры")
-        } else if (this.state.password1 !== this.state.password2) {
+        }*/ else if (this.state.password1 !== this.state.password2) {
             alert("Пароли не совпадают")
         } else {
-            alert("Успешно")
+            alert("Успешно");
+            console.log(JSON.stringify({
+                    "username": this.state.username,
+                    "email": this.state.email,
+                    "password": this.state.password1
+                }));
+            fetch('https://run.mocky.io/v3/dd811ae1-cd0a-4b27-b815-1012aea4502d')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    alert("Ответ сервера:"+data.message);
+                    console.log("data", data.message)
+                })
         }
         event.preventDefault();
     }
@@ -52,6 +66,7 @@ class Singup extends React.Component {
     render() {
         return (
             <div class="form">
+                <Helmet title="Регистрация"/>
                 <h2>Регистрация</h2>
                 <form onSubmit={this.submitCheckIn}>
                     <input

@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService implements EmailSender {
 
-    private JavaMailSender emailSender;
+    private final JavaMailSender emailSender;
+    private final String sender;
 
-    @Value ("${spring.mail.username}")
-    private String sender;
     @Autowired
-    public EmailService(JavaMailSender emailSender){
+    public EmailService(JavaMailSender emailSender,@Value ("${spring.mail.username}") String sender){
         this.emailSender = emailSender;
+        this.sender = sender;
     }
 
     @Override

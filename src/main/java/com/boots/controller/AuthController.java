@@ -12,6 +12,7 @@ import com.boots.jwt.JwtUtils;
 import com.boots.payload.request.LoginRequest;
 import com.boots.payload.request.SignupRequest;
 import com.boots.payload.response.MessageResponse;
+import com.boots.payload.response.UserInfoResponse;
 import com.boots.repository.RoleRepository;
 import com.boots.repository.UserRepository;
 import com.boots.service.UserDetailsImpl;

@@ -2,12 +2,17 @@ package com.boots.controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import com.boots.entity.EnumRole;
+import com.boots.entity.RefreshToken;
 import com.boots.entity.Role;
 import com.boots.entity.User;
+import com.boots.exception.TokenRefreshException;
 import com.boots.jwt.JwtUtils;
 import com.boots.payload.request.LoginRequest;
 import com.boots.payload.request.SignupRequest;
@@ -15,6 +20,7 @@ import com.boots.payload.response.MessageResponse;
 import com.boots.payload.response.UserInfoResponse;
 import com.boots.repository.RoleRepository;
 import com.boots.repository.UserRepository;
+import com.boots.service.RefreshTokenService;
 import com.boots.service.UserDetailsImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -48,15 +54,23 @@ public class AuthController {
     final
     PasswordEncoder encoder;
 
+
+    final RefreshTokenService refreshTokenService;
     final
     JwtUtils jwtUtils;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          UserRepository userRepository,
+                          RoleRepository roleRepository,
+                          PasswordEncoder encoder,
+                          JwtUtils jwtUtils,
+                          RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/signin")
@@ -75,7 +89,13 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
@@ -128,8 +148,40 @@ public class AuthController {
 
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!Objects.equals(principle.toString(), "anonymousUser")) {
+            Long userId = ((UserDetailsImpl) principle).getId();
+            refreshTokenService.deleteByUserId(userId);
+        }
+
+        ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
+        ResponseCookie jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
+    }
+
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
+        String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
+
+        if ((refreshToken != null) && (refreshToken.length() > 0)) {
+            return refreshTokenService.findByToken(refreshToken)
+                    .map(refreshTokenService::verifyExpiration)
+                    .map(RefreshToken::getUser)
+                    .map(user -> {
+                        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
+
+                        return ResponseEntity.ok()
+                                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                                .body(new MessageResponse("Token is refreshed successfully!"));
+                    })
+                    .orElseThrow(() -> new TokenRefreshException(refreshToken,
+                            "Refresh token is not in database!"));
+        }
+
+        return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
     }
 }

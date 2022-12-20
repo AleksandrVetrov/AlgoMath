@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/access")
+@RequestMapping("/api/test")
 public class AccessController {
     @GetMapping("/all")
     public String allAccess() {
@@ -15,7 +15,7 @@ public class AccessController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize(value = "hasRole('USER') or hasRole('ADMIN')")
     public String userAccess() {
         return "User Content.";
     }

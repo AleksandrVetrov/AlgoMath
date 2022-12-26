@@ -142,5 +142,23 @@ form {
     width: 100%;
 }
 
+@media (max-width: 800px){
+    .form h2{
+        font-size:50px;
+        text-align: center;
+    }
+
+    .form form {
+        width: 100vw;
+    }
+    .form form input{
+        width: 90%;
+    }
+
+    .form button{
+        width: 40%;
+    }
+}
+
 
 

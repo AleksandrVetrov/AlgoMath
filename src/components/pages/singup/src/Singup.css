@@ -45,7 +45,6 @@ form input {
 }
 
 
-
 form input::placeholder {
     font-family: 'Inter', sans-serif;
     font-style: normal;
@@ -54,7 +53,8 @@ form input::placeholder {
     line-height: 25px;
     color: #B9B9B9;
 }
-form button{
+
+form button {
     background: #F5F5F7;
     border: 1px solid #E2E2E2;
     font-family: 'Inter', sans-serif;
@@ -70,12 +70,12 @@ form button{
     transition: background 0.3s;
 }
 
-form button:hover{
+form button:hover {
     cursor: pointer;
-    background:#E2E2E2;
+    background: #E2E2E2;
 }
 
-.form p{
+.form p {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -84,11 +84,29 @@ form button:hover{
     color: #3D3D3D;
 }
 
-.form a{
+.form a {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: 21px;
     line-height: 25px;
     color: #3D3D3D;
+}
+
+@media (max-width: 800px){
+    .form h2{
+        font-size:50px;
+        text-align: center;
+    }
+
+    .form form {
+        width: 100vw;
+    }
+    .form form input{
+        width: 90%;
+    }
+
+    .form button{
+        width: 40%;
+    }
 }

@@ -2,6 +2,7 @@ import './Login.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import Helmet from "react-helmet";
 
 class Login extends React.Component {
     constructor(props) {
@@ -17,6 +18,17 @@ class Login extends React.Component {
 
     submitCheckIn(event){
         alert("Успешно");
+        console.log(JSON.stringify({
+            "username": this.state.username,
+            "password": this.state.password
+        }));
+        fetch('https://run.mocky.io/v3/61468e1f-587b-44d5-91cf-a1d3c0762b79')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log("data", data)
+            })
         event.preventDefault();
     }
 
@@ -35,6 +47,7 @@ class Login extends React.Component {
     render() {
         return (
             <div class="form">
+                <Helmet title="Вход в систему"/>
                 <h2>Вход в систему</h2>
                 <form onSubmit={this.submitCheckIn}>
                     <input

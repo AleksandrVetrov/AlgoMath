@@ -1,5 +1,5 @@
 import './Profile.css';
-
+import Helmet from "react-helmet"
 import React from 'react';
 import validator from 'validator';
 import Orders from './Orders'
@@ -12,7 +12,7 @@ class Userprofile extends React.Component {
             email: "",
             vkLink: "",
             tgLink: "",
-            showOrders: true,
+            showOrders: false,
 
         }
         this.onNameChange = this.onNameChange.bind(this);
@@ -59,6 +59,7 @@ class Userprofile extends React.Component {
         const showOrders = this.state.showOrders;
         return (
             <div class="app">
+                <Helmet title="Профиль"/>
                 <div className="profile_buttons">
                     <button id="data" onClick={this.handleFormClick}>Мои данные</button>
                     <button id="orders" onClick={this.handleOrdersClick}>Мои заказы</button>

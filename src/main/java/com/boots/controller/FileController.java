@@ -1,71 +1,47 @@
 package com.boots.controller;
 
-import com.boots.entity.FileDB;
-import com.boots.payload.response.MessageResponse;
 import com.boots.payload.response.ResponseFile;
-import com.boots.service.FileStorageService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import com.boots.service.MinioService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE;
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/api/files")
+@RequestMapping("/api/file")
 public class FileController {
 
-    private final FileStorageService storageService;
 
-    public FileController(FileStorageService storageService) {
-        this.storageService = storageService;
+
+    private final MinioService minioService;
+
+    public FileController(MinioService minioService) {
+        this.minioService = minioService;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<MessageResponse> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message;
-        try {
-            storageService.store(file);
-
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(message));
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResponse(message));
-        }
+    public ResponseEntity<Object> upload(@ModelAttribute ResponseFile request) {
+        return ResponseEntity.ok().body(minioService.uploadFile(request));
     }
 
     @GetMapping("/allFiles")
-    public ResponseEntity<List<ResponseFile>> getListFiles() {
-        List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
-            String fileDownloadUri = ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
-                    .path("/files/")
-                    .path(dbFile.getId())
-                    .toUriString();
-
-            return new ResponseFile(
-                    dbFile.getName(),
-                    fileDownloadUri,
-                    dbFile.getType(),
-                    dbFile.getData().length);
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.status(HttpStatus.OK).body(files);
+    public ResponseEntity<Object> getFiles() {
+        return ResponseEntity.ok(minioService.getListObjects());
     }
 
-    @GetMapping("/fileById/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        FileDB fileDB = storageService.getFile(id);
-
+    @GetMapping(value = "/**")
+    public ResponseEntity<Object> getFile(HttpServletRequest request) throws IOException {
+        String pattern = (String) request.getAttribute(BEST_MATCHING_PATTERN_ATTRIBUTE);
+        String filename = new AntPathMatcher().extractPathWithinPattern(pattern, request.getServletPath());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-                .body(fileDB.getData());
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(IOUtils.toByteArray(minioService.getObject(filename)));
     }
 }
 

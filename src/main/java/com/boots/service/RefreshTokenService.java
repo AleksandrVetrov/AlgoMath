@@ -4,7 +4,6 @@ import com.boots.entity.RefreshToken;
 import com.boots.exception.TokenRefreshException;
 import com.boots.repository.RefreshTokenRepository;
 import com.boots.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

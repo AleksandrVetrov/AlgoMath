@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class MinioService {
-    
+
     private final MinioClient minioClient;
     private static final Logger logger = LoggerFactory.getLogger(MinioClient.class);
     @Value("${minio.bucket.name}")
@@ -42,7 +42,7 @@ public class MinioService {
             }
             return objects;
         } catch (Exception e) {
-            logger.error("Happened error when get list objects from minio: ", e.getMessage());
+            logger.error("Happened error when get list objects from minio: ");
         }
 
         return objects;
@@ -65,10 +65,17 @@ public class MinioService {
 
     public ResponseFile uploadFile(ResponseFile request) {
         try {
+//            For HTTPS (На будущее)
+//            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+//            keyGen.init(256);
+//            ServerSideEncryptionCustomerKey ssec =
+//                    new ServerSideEncryptionCustomerKey(keyGen.generateKey());
+
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(request.getFile().getOriginalFilename())
                     .stream(request.getFile().getInputStream(), request.getFile().getSize(), -1)
+                    //.sse(ssec)
                     .build());
         } catch (Exception e) {
             logger.error("Happened error when upload file: ", e);

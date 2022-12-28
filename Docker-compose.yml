@@ -5,7 +5,7 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_DB: "A/lgoMathDB"
+      POSTGRES_DB: "AlgoMathDB"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "123"
     ports:

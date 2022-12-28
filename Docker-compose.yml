@@ -10,3 +10,8 @@ services:
       POSTGRES_PASSWORD: "123"
     ports:
       - "5432:5432"
+
+  front:
+    build: ./AlgoMath-Front
+    ports:
+      - "3000:3000"

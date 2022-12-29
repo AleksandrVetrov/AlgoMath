@@ -3,4 +3,5 @@ WORKDIR /app
 COPY . .    
 RUN mvn package     
 EXPOSE 8080
+EXPOSE 5432
 CMD ["java", "-jar", "/app/target/spring-1.0-SNAPSHOT.jar"]

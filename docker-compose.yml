@@ -2,6 +2,15 @@ version: "3"
 
 services:
 
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "AlgoMathDB"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123"
+    ports:
+      - "5432:5432"
+
   front:
     build: ./AlgoMath-Front
     ports:
@@ -9,5 +18,6 @@ services:
 
   api:
     build: ./AlgoMath-Back
+    restart: unless-stopped
     ports:
       - "8080:8080"

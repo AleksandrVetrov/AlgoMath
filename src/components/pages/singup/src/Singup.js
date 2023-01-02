@@ -14,7 +14,8 @@ class Singup extends React.Component {
             email: "",
             password1: "",
             password2: "",
-            usernameError:""
+            usernameError:"",
+            emailError:""
         }
         this.onNameChange = this.onNameChange.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
@@ -22,6 +23,7 @@ class Singup extends React.Component {
         this.onPassConfChange = this.onPassConfChange.bind(this);
         this.submitCheckIn = this.submitCheckIn.bind(this);
         this.onNameBlur = this.onNameBlur.bind(this);
+        this.onEmailBlur = this.onEmailBlur.bind(this);
     }
 
     submitCheckIn(event) {
@@ -52,9 +54,19 @@ class Singup extends React.Component {
 
     onNameBlur(){
         if(this.state.username === ""){
-            this.setState({usernameError:"Имя пользователя не может быть пустым"})
+            this.setState({usernameError:"Имя пользователя не может быть пустым"});
         }else{
-            this.setState({usernameError:""})
+            this.setState({usernameError:""});
+        }
+    }
+
+    onEmailBlur(){
+        if(this.state.email === ""){
+            this.setState({emailError:"Email не может быть пустым"})
+        }else if(!validator.isEmail(this.state.email)){
+            this.setState({emailError:"Некорректный Email"})
+        }else{
+            this.setState({emailError:""})
         }
     }
 
@@ -97,7 +109,9 @@ class Singup extends React.Component {
                         placeholder="Email"
                         value={this.state.email}
                         onChange={this.onEmailChange}
+                        onBlur={this.onEmailBlur}
                     />
+                    <Error errorMessage={this.state.emailError}/>
                      <input
                         type="password"
                         id="password"

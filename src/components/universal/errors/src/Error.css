@@ -1,0 +1,10 @@
+.error{
+    align-self: flex-start;
+}
+.error p {
+    padding-left: 2vw;
+    color:red;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    margin: 0;
+}

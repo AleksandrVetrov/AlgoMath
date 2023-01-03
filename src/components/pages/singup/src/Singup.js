@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client';
 import validator from 'validator';
 import Helmet from "react-helmet";
 import Error from "../../../universal/errors/src/Erros";
+import isEmpty from "validator/es/lib/isEmpty";
 
 class Singup extends React.Component {
     constructor(props) {
@@ -12,10 +13,13 @@ class Singup extends React.Component {
         this.state = {
             username: "",
             email: "",
-            password1: "",
-            password2: "",
-            usernameError:"",
-            emailError:""
+            password: "",
+            passwordConf:"",
+            usernameError: "",
+            emailError: "",
+            passwordError: "",
+            passwordConfError:"",
+
         }
         this.onNameChange = this.onNameChange.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
@@ -24,22 +28,11 @@ class Singup extends React.Component {
         this.submitCheckIn = this.submitCheckIn.bind(this);
         this.onNameBlur = this.onNameBlur.bind(this);
         this.onEmailBlur = this.onEmailBlur.bind(this);
+        this.onPassBlur = this.onPassBlur.bind(this);
+        this.onPassConfBlur = this.onPassConfBlur.bind(this);
     }
 
     submitCheckIn(event) {
-        // if (!validator.isEmail(this.state.email)) {
-        //     alert("Вы не ввели почту")
-        // } /*else if (!validator.isStrongPassword(this.state.password1, {minlength: 8})) {
-        //     alert("Длина пароля не менее 8 символов.Пароль должен содержать строчные,прописные буквы и цифры")
-        // }*/ else if (this.state.password1 !== this.state.password2) {
-        //     alert("Пароли не совпадают")
-        // } else {
-        //     alert("Успешно");
-        //     console.log(JSON.stringify({
-        //             "username": this.state.username,
-        //             "email": this.state.email,
-        //             "password": this.state.password1
-        //         }));
         //     fetch('https://run.mocky.io/v3/dd811ae1-cd0a-4b27-b815-1012aea4502d')
         //         .then(function (response) {
         //             return response.json();
@@ -52,23 +45,44 @@ class Singup extends React.Component {
         event.preventDefault();
     }
 
-    onNameBlur(){
-        if(this.state.username === ""){
-            this.setState({usernameError:"Имя пользователя не может быть пустым"});
-        }else{
-            this.setState({usernameError:""});
+    onNameBlur() {
+        if (isEmpty(this.state.username)) {
+            this.setState({usernameError: "Поле не может быть пустым"});
+        } else {
+            this.setState({usernameError: ""});
+        }
+        console.log(isEmpty(this.state.username))
+    }
+
+    onEmailBlur() {
+        if (isEmpty(this.state.email)) {
+            this.setState({emailError: "Поле не может быть пустым"});
+        } else if (!validator.isEmail(this.state.email)) {
+            this.setState({emailError: "Некорректный Email"});
+        } else {
+            this.setState({emailError: ""});
         }
     }
 
-    onEmailBlur(){
-        if(this.state.email === ""){
-            this.setState({emailError:"Email не может быть пустым"})
-        }else if(!validator.isEmail(this.state.email)){
-            this.setState({emailError:"Некорректный Email"})
-        }else{
-            this.setState({emailError:""})
+    onPassBlur() {
+        if (isEmpty(this.state.password)) {
+            this.setState({passwordError: "Поле не может быть пустым"});
+        } else if (!validator.isStrongPassword(this.state.password, {minlength: 8})) {
+            this.setState({passwordError: "Пароль должен состоять из 8 символов, содержать специальные знаки, цифры, заглавные и прописные буквы"});
+        } else {
+            this.setState({passwordError: ""});
         }
     }
+
+    onPassConfBlur(){
+        if(this.state.password !== this.state.passwordConf){
+            this.setState({passwordConfError:"Пароли не совпадают"});
+        }else{
+            this.setState({passwordConfError:""});
+        }
+    }
+
+
 
     onNameChange(event) {
         this.setState({username: event.target.value});
@@ -79,11 +93,11 @@ class Singup extends React.Component {
     }
 
     onPassChange(event) {
-        this.setState({password1: event.target.value});
+        this.setState({password: event.target.value});
     }
 
     onPassConfChange(event) {
-        this.setState({password2: event.target.value});
+        this.setState({passwordConf: event.target.value});
     }
 
     render() {
@@ -102,7 +116,7 @@ class Singup extends React.Component {
                         onBlur={this.onNameBlur}
                     />
                     <Error errorMessage={this.state.usernameError}/>
-                     <input
+                    <input
                         type="email"
                         id="email"
                         name="email"
@@ -112,22 +126,26 @@ class Singup extends React.Component {
                         onBlur={this.onEmailBlur}
                     />
                     <Error errorMessage={this.state.emailError}/>
-                     <input
+                    <input
                         type="password"
                         id="password"
                         name="password"
                         placeholder="Пароль"
-                        value={this.state.password1}
+                        value={this.state.password}
                         onChange={this.onPassChange}
+                        onBlur={this.onPassBlur}
                     />
-                     <input
+                    <Error errorMessage={this.state.passwordError}/>
+                    <input
                         type="password"
-                        id="password2"
-                        name="password2"
+                        id="passwordConf"
+                        name="passwordConf"
                         placeholder="Подтвердите пароль"
-                        value={this.state.password2}
+                        value={this.state.passwordConf}
                         onChange={this.onPassConfChange}
+                        onBlur={this.onPassConfBlur}
                     />
+                    <Error errorMessage={this.state.passwordConfError}/>
                     <button type="submit">Отправить</button>
                 </form>
                 <p>Уже есть аккаунт ? <a href='/login'>Войти</a></p>

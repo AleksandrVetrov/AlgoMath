@@ -1,3 +1,6 @@
+//TODO: Заблокировать кнопку отправки в случае ошибки
+//TODO: Переписать заглушки на отправку реальных данных
+
 import './Singup.css';
 
 import React from 'react';
@@ -46,7 +49,7 @@ class Singup extends React.Component {
     }
 
     onNameBlur() {
-        if (isEmpty(this.state.username)) {
+        if (isEmpty(this.state.username.trim())) {
             this.setState({usernameError: "Поле не может быть пустым"});
         } else {
             this.setState({usernameError: ""});
@@ -55,7 +58,7 @@ class Singup extends React.Component {
     }
 
     onEmailBlur() {
-        if (isEmpty(this.state.email)) {
+        if (isEmpty(this.state.email.trim())) {
             this.setState({emailError: "Поле не может быть пустым"});
         } else if (!validator.isEmail(this.state.email)) {
             this.setState({emailError: "Некорректный Email"});
@@ -65,7 +68,7 @@ class Singup extends React.Component {
     }
 
     onPassBlur() {
-        if (isEmpty(this.state.password)) {
+        if (isEmpty(this.state.password.trim())) {
             this.setState({passwordError: "Поле не может быть пустым"});
         } else if (!validator.isStrongPassword(this.state.password, {minlength: 8})) {
             this.setState({passwordError: "Пароль должен состоять из 8 символов, содержать специальные знаки, цифры, заглавные и прописные буквы"});

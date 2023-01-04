@@ -1,6 +1,3 @@
-//TODO: Заблокировать кнопку отправки в случае ошибки
-//TODO: Переписать заглушки на отправку реальных данных
-
 import './Singup.css';
 
 import React from 'react';
@@ -17,11 +14,11 @@ class Singup extends React.Component {
             username: "",
             email: "",
             password: "",
-            passwordConf:"",
+            passwordConf: "",
             usernameError: "",
             emailError: "",
             passwordError: "",
-            passwordConfError:"",
+            passwordConfError: "",
 
         }
         this.onNameChange = this.onNameChange.bind(this);
@@ -36,17 +33,46 @@ class Singup extends React.Component {
     }
 
     submitCheckIn(event) {
-        //     fetch('https://run.mocky.io/v3/dd811ae1-cd0a-4b27-b815-1012aea4502d')
-        //         .then(function (response) {
-        //             return response.json();
-        //         })
-        //         .then(function (data) {
-        //             alert("Ответ сервера:"+data.message);
-        //             console.log("data", data.message)
-        //         })
-        // }
+        if (this.checkData() && this.checkErrors()) {
+            try {
+                const response = fetch("http://localhost:8080/api/auth/singup", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "username": this.state.username,
+                        "email": this.state.email,
+                        "password": this.state.password,
+                    })
+                });
+                console.log('Успех:', JSON.stringify(response));
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
         event.preventDefault();
     }
+
+     checkData(){
+        if(isEmpty(this.state.username.trim())||
+            isEmpty(this.state.email.trim())||
+            isEmpty(this.state.password.trim())||
+            isEmpty(this.state.passwordConf.trim())
+        ){
+            return false;
+        }
+        return true;
+    }
+
+    checkErrors(){
+        if(!(isEmpty(this.state.usernameError.trim())&&
+            isEmpty(this.state.emailError.trim())&&
+            isEmpty(this.state.passwordError.trim())&&
+            isEmpty(this.state.passwordConfError.trim()))
+        ){
+            return false;
+        }
+        return true;
+    }
+
 
     onNameBlur() {
         if (isEmpty(this.state.username.trim())) {
@@ -54,7 +80,6 @@ class Singup extends React.Component {
         } else {
             this.setState({usernameError: ""});
         }
-        console.log(isEmpty(this.state.username))
     }
 
     onEmailBlur() {
@@ -77,14 +102,13 @@ class Singup extends React.Component {
         }
     }
 
-    onPassConfBlur(){
-        if(this.state.password !== this.state.passwordConf){
-            this.setState({passwordConfError:"Пароли не совпадают"});
-        }else{
-            this.setState({passwordConfError:""});
+    onPassConfBlur() {
+        if (this.state.password !== this.state.passwordConf) {
+            this.setState({passwordConfError: "Пароли не совпадают"});
+        } else {
+            this.setState({passwordConfError: ""});
         }
     }
-
 
 
     onNameChange(event) {

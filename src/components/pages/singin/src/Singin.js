@@ -24,19 +24,19 @@ class Singin extends React.Component {
 
     submitSingIn(event) {
         if (this.checkData()) {
-            console.log(JSON.stringify({
-                "username": this.state.username,
-                "password": this.state.password
-            }));
-            fetch('https://run.mocky.io/v3/61468e1f-587b-44d5-91cf-a1d3c0762b79')
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data) {
-                    console.log("data", data)
-                })
+            try {
+                const response = fetch("http://localhost:8080//api/auth/signin", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "username": this.state.username,
+                        "password": this.state.password,
+                    })
+                });
+                console.log('Успех:', JSON.stringify(response));
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
         }
-
         event.preventDefault();
     }
 
@@ -72,7 +72,7 @@ class Singin extends React.Component {
             <div class="form">
                 <Helmet title="Вход в систему"/>
                 <h2>Вход в систему</h2>
-                <form onSubmit={this.submitCheckIn}>
+                <form onSubmit={this.submitSingIn}>
                     <input
                         type="username"
                         id="username"

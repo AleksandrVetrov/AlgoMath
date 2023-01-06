@@ -17,8 +17,8 @@ class Header extends React.Component {
     }
     render() {
         return (
-            <div class="error">
-                <p>{this.state.errorMessage}</p>
+            <div class="error" >
+                <p id="error">{this.state.errorMessage}</p>
             </div>
         );
     }

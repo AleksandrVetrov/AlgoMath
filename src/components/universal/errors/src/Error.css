@@ -1,9 +1,10 @@
-.error{
+.error {
     align-self: flex-start;
 }
-.error p {
+
+#error {
     padding-left: 2vw;
-    color:red;
+    color: red;
     font-family: 'Inter', sans-serif;
     font-size: 15px;
     margin: 0;

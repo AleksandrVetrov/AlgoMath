@@ -51,26 +51,18 @@ class Singup extends React.Component {
         event.preventDefault();
     }
 
-     checkData(){
-        if(isEmpty(this.state.username.trim())||
-            isEmpty(this.state.email.trim())||
-            isEmpty(this.state.password.trim())||
-            isEmpty(this.state.passwordConf.trim())
-        ){
-            return false;
-        }
-        return true;
+    checkData() {
+        return !(isEmpty(this.state.username.trim()) ||
+            isEmpty(this.state.email.trim()) ||
+            isEmpty(this.state.password.trim()) ||
+            isEmpty(this.state.passwordConf.trim()));
     }
 
-    checkErrors(){
-        if(!(isEmpty(this.state.usernameError.trim())&&
-            isEmpty(this.state.emailError.trim())&&
-            isEmpty(this.state.passwordError.trim())&&
-            isEmpty(this.state.passwordConfError.trim()))
-        ){
-            return false;
-        }
-        return true;
+    checkErrors() {
+        return isEmpty(this.state.usernameError.trim()) &&
+            isEmpty(this.state.emailError.trim()) &&
+            isEmpty(this.state.passwordError.trim()) &&
+            isEmpty(this.state.passwordConfError.trim());
     }
 
 

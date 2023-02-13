@@ -23,7 +23,7 @@ class Singin extends React.Component {
     }
 
     submitSingIn(event) {
-        if (this.checkData()) {
+        if (this.checkData() && this.checkErrors()) {
             try {
                 const response = fetch("http://localhost:8080//api/auth/signin", {
                     method: 'POST',
@@ -45,15 +45,24 @@ class Singin extends React.Component {
             isEmpty(this.state.password.trim()));
     }
 
+    checkErrors() {
+        return isEmpty(this.state.usernameError.trim()) &&
+            isEmpty(this.state.passwordError.trim());
+    }
+
     onNameBlur() {
         if (isEmpty(this.state.username.trim())) {
             this.setState({usernameError: "Поле не может быть пустым"});
+        } else {
+            this.setState({usernameError: ""});
         }
     }
 
     onPassBlur() {
         if (isEmpty(this.state.password.trim())) {
             this.setState({passwordError: "Поле не может быть пустым"});
+        } else {
+            this.setState({passwordError: ""});
         }
     }
 
@@ -92,7 +101,7 @@ class Singin extends React.Component {
                         onChange={this.onPassChange}
                         onBlur={this.onPassBlur}
                     />
-                    <Error errorMessage={this.state.usernameError}/>
+                    <Error errorMessage={this.state.passwordError}/>
                     <button type="submit">Войти</button>
                 </form>
                 <p>Забыли <a href='#'>Имя пользователя?</a><span>/</span><a href="#">Пароль?</a></p>

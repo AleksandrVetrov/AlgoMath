@@ -1,16 +1,9 @@
 package com.boots.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.boots.entity.EnumRole;
 import com.boots.entity.RefreshToken;
-import com.boots.entity.Role;
 import com.boots.entity.User;
 import com.boots.exception.TokenRefreshException;
 import com.boots.jwt.JwtUtils;
@@ -20,8 +13,7 @@ import com.boots.payload.response.MessageResponse;
 import com.boots.payload.response.UserInfoResponse;
 import com.boots.repository.RoleRepository;
 import com.boots.repository.UserRepository;
-import com.boots.service.RefreshTokenService;
-import com.boots.service.UserDetailsImpl;
+import com.boots.service.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -164,24 +156,27 @@ public class AuthController {
     }
 
     @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
 
-        if ((refreshToken != null) && (refreshToken.length() > 0)) {
-            return refreshTokenService.findByToken(refreshToken)
-                    .map(refreshTokenService::verifyExpiration)
-                    .map(RefreshToken::getUser)
-                    .map(user -> {
-                        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
-
-                        return ResponseEntity.ok()
-                                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                                .body(new MessageResponse("Token is refreshed successfully!"));
-                    })
-                    .orElseThrow(() -> new TokenRefreshException(refreshToken,
-                            "Refresh token is not in database!"));
+        if (refreshToken.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Refresh token is empty!"));
         }
 
-        return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenService.findByToken(refreshToken);
+        if (optionalRefreshToken.isEmpty()) {
+            throw new TokenRefreshException(refreshToken, "Refresh token is not in database!");
+        }
+
+        RefreshToken refreshTokenObj = optionalRefreshToken.get();
+        refreshTokenService.verifyExpiration(refreshTokenObj);
+
+        User user = refreshTokenObj.getUser();
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(new MessageResponse("Token is refreshed successfully!"));
     }
+
 }

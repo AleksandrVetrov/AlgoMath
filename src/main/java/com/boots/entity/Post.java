@@ -1,7 +1,5 @@
 package com.boots.entity;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +7,9 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 public class Post {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -27,8 +25,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostAttachment> attachments = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
+
+    public Post() {
     }
 
     public void setTitle(String title) {
@@ -67,11 +65,4 @@ public class Post {
         return attachments;
     }
 
-    public Post() {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.user = user;
-        this.attachments = attachments;
-    }
 }

@@ -27,7 +27,7 @@ public class PostAttachment {
 
 
 
-    public PostAttachment(String fileName, long fileSize, String fileType, String url) {
+    public PostAttachment() {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.fileType = fileType;

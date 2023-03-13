@@ -80,7 +80,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <start-class>java.com.boots.Application</start-class>
+        <start-class>com.boots.Application</start-class>
     </properties>
 
     <build>
@@ -91,7 +91,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <configuration>
-                        <mainClass>java.com.boots.Application</mainClass>
+                        <mainClass>com.boots.Application</mainClass>
                         <layout>JAR</layout>
                     </configuration>
                     <executions>

@@ -1,0 +1,10 @@
+.success {
+    align-self: center;
+}
+
+#success {
+    color: green;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    margin: 0;
+}

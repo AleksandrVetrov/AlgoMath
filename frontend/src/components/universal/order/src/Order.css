@@ -1,0 +1,23 @@
+.order_item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 50vw;
+    background: #F5F5F7;
+    border: 2px solid #E2E2E2;
+    border-radius: 12px;
+    margin-bottom: 1vw;
+}
+
+.order_item p{
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 25px;
+    text-align: center;
+    color: #3D3D3D;
+    width: 100%;
+    text-align: center;
+}

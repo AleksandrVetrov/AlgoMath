@@ -1,7 +1,5 @@
-# Создание образа с Java Runtime Environment
-FROM eclipse-temurin:18-jdk-alpine
+FROM openjdk:20
 WORKDIR /app
-# Копирование скомпилированного приложения в образ с JRE
 COPY target/*.jar /usr/app/app.jar
 
 ENV SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/AlgoMathDB

@@ -6,14 +6,14 @@ import com.boots.entity.User;
 import com.boots.payload.request.PostDTO;
 import com.boots.repository.PostRepository;
 import com.boots.repository.UserRepository;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.*;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ public class PostService {
             assert filename != null;
             String extension = filename.substring(filename.lastIndexOf(".") + 1);
 
-            String objectName = UUID.randomUUID().toString() + "." + extension;
+            String objectName = UUID.randomUUID() + "." + extension;
             InputStream inputStream = file.getInputStream();
             long size = file.getSize();
 
@@ -65,7 +65,13 @@ public class PostService {
             attachment.setFileName(filename);
             attachment.setFileSize(size);
             attachment.setFileType(extension);
-            //attachment.setUrl(minioClient.getObjectUrl(minioBucketName, objectName)); надо дописать, чтобы в бд подвязывалась ссылочка на файлы к посту
+            attachment.setUrl(minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs
+                    .builder()
+                            .method(Method.GET)
+                            .bucket(minioBucketName)
+                            .object(objectName)
+                            .expiry(60*60*24)
+                    .build())); //надо дописать, чтобы в бд подвязывалась ссылочка на файлы к посту
             attachments.add(attachment);
         }
 

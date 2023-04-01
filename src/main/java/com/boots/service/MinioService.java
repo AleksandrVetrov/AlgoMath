@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -90,6 +91,6 @@ public class MinioService {
     }
 
     private String getPreSignedUrl(String filename) {
-        return "http://localhost:8080/file/".concat(filename);
+        return "http://localhost:8080/file/".concat(String.valueOf(UUID.randomUUID()));
     }
 }

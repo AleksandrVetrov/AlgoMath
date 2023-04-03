@@ -1,0 +1,19 @@
+.notfound{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.text{
+    text-align: center;
+    font-size: 50px;
+    font-family: 'Inter', sans-serif;
+
+}
+.code{
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 100px;
+}

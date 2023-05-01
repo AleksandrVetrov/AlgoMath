@@ -2,6 +2,7 @@ package com.boots.service;
 
 import com.boots.payload.response.ResponseFile;
 import io.minio.*;
+import io.minio.errors.*;
 import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -9,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -64,7 +68,14 @@ public class MinioService {
         return stream;
     }
 
-    public ResponseFile uploadFile(ResponseFile request) {
+    public ResponseFile uploadFile(ResponseFile request) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        boolean foundBucket = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+        if (!foundBucket) {
+            log.info("create bucket: [{}]", bucketName);
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        } else {
+            log.info("bucket '{}' already exists.", bucketName);
+        }
         try {
 //            For HTTPS (На будущее)
 //            KeyGenerator keyGen = KeyGenerator.getInstance("AES");

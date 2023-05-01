@@ -20,18 +20,13 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseFile implements Serializable {
 
-    private static final long serialVersionUID = 232836038145089522L;
+    private String realName;
 
-    private String title;
-
-    private String description;
-
-    @SuppressWarnings("java:S1948")
-    private MultipartFile file;
+    private String uploadName;
 
     private String url;
 
-    private Long size;
+    private long size;
 
-    private String filename;
+    private String bucket;
 }

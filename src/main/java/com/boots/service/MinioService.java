@@ -1,107 +1,144 @@
 package com.boots.service;
 
+
 import com.boots.payload.response.ResponseFile;
 import io.minio.*;
 import io.minio.errors.*;
-import io.minio.messages.Item;
+import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
-@Service
+@Component
 public class MinioService {
 
-    private final MinioClient minioClient;
-    private static final Logger logger = LoggerFactory.getLogger(MinioClient.class);
-    @Value("${minio.bucket.name}")
+    @Value("${minio.url}")
+    private String endPoint;
+    @Value("minio.bucket.name")
     private String bucketName;
+    private MinioClient client;
 
-    public MinioService(MinioClient minioClient) {
-        this.minioClient = minioClient;
-    }
+    public MinioProperties minioProperties;
 
-    public List<ResponseFile> getListObjects() {
-        List<ResponseFile> objects = new ArrayList<>();
-        try {
-            Iterable<Result<Item>> result = minioClient.listObjects(ListObjectsArgs.builder()
-                    .bucket(bucketName)
-                    .recursive(true)
-                    .build());
-            for (Result<Item> item : result) {
-                objects.add(ResponseFile.builder()
-                        .filename(item.get().objectName())
-                        .size(item.get().size())
-                        .url(getPreSignedUrl(item.get().objectName()))
-                        .build());
-            }
-            return objects;
-        } catch (Exception e) {
-            logger.error("Happened error when get list objects from minio: ");
-        }
+    public ResponseFile uploadFile(MultipartFile multipartFile) throws IOException, InternalException, ServerException,
+            InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException,
+            InvalidResponseException, XmlParserException {
 
-        return objects;
-    }
-
-    public InputStream getObject(String filename) {
-        InputStream stream;
-        try {
-            stream = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(filename)
-                    .build());
-        } catch (Exception e) {
-            logger.error("Happened error when get list objects from minio: ", e);
-            return null;
-        }
-
-        return stream;
-    }
-
-    public ResponseFile uploadFile(ResponseFile request) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        boolean foundBucket = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+        boolean foundBucket = client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         if (!foundBucket) {
             log.info("create bucket: [{}]", bucketName);
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            client.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         } else {
             log.info("bucket '{}' already exists.", bucketName);
         }
-        try {
-//            For HTTPS (На будущее)
-//            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-//            keyGen.init(256);
-//            ServerSideEncryptionCustomerKey ssec =
-//                    new ServerSideEncryptionCustomerKey(keyGen.generateKey());
 
-            minioClient.putObject(PutObjectArgs.builder()
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+
+            String uploadName = UUID.randomUUID() + "_" +
+                    Objects.requireNonNull(multipartFile.getOriginalFilename())
+                            .substring(multipartFile.getOriginalFilename()
+                                    .lastIndexOf("."));
+
+            PutObjectArgs putObjectOptions = PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object(request.getFile().getOriginalFilename())
-                    .stream(request.getFile().getInputStream(), request.getFile().getSize(), -1)
-                    //.sse(ssec)
-                    .build());
-        } catch (Exception e) {
-            logger.error("Happened error when upload file: ", e);
+                    .object(uploadName)
+                    .contentType(multipartFile.getContentType())
+                    .stream(inputStream, multipartFile.getSize(), -1)
+                    .build();
+            client.putObject(putObjectOptions);
+
+            final String url = endPoint + "/" + bucketName + "/" + UriUtils.encode(uploadName, StandardCharsets.UTF_8);
+
+            return ResponseFile.builder()
+                    .uploadName(uploadName)
+                    .url(url)
+                    .realName(multipartFile.getOriginalFilename())
+                    .size(multipartFile.getSize())
+                    .bucket(bucketName)
+                    .build();
         }
-        return ResponseFile.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .size(request.getFile().getSize())
-                .url(getPreSignedUrl(request.getFile().getOriginalFilename()))
-                .filename(request.getFile().getOriginalFilename())
-                .build();
     }
 
-    private String getPreSignedUrl(String filename) {
-        return "http://localhost:8080/file/".concat(String.valueOf(UUID.randomUUID()));
+    public void removeFile(String fileName) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        client.removeObject(RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .object(fileName)
+                .build());
+    }
+
+
+    public void download(HttpServletResponse response, String fileName, String realName) throws Exception {
+        InputStream in = null;
+        try {
+            StatObjectResponse stat = client.statObject(StatObjectArgs.builder().bucket(bucketName)
+                    .object(fileName)
+                    .build());
+            response.setContentType(stat.contentType());
+            response.setHeader("Content-disposition", "attachment;filename=" +
+                    new String(realName.getBytes("gb2312"),
+                            "ISO8859-1"));
+            in = client.getObject(GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(fileName)
+                    .build());
+            IOUtils.copy(in, response.getOutputStream());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+
+    public CreateMultipartUploadResponse uploadId(MultipartUploadCreate multipartUploadCreate) {
+
+    }
+
+
+    public CreateMultipartUploadResponse createMultipartUpload(MultipartUploadCreate multipartUploadCreate) {
+
+    }
+
+    public ObjectWriteResponse completeMultipartUpload(MultipartUploadCreate multipartUploadCreate) {
+
+    }
+
+
+    public ListPartsResponse listMultipart(MultipartUploadCreate multipartUploadCreate) {
+
+    }
+
+
+    public String getPresignedObjectUrl(String bucketName, String objectName, Map<String, String> queryParams) {
+        try {
+            return client.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.PUT)
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .expiry(60 * 60 * 24)
+                            .extraQueryParams(queryParams)
+                            .build());
+        } catch (Exception e) {
+            throw new IllegalArgumentException();
+        }
     }
 }

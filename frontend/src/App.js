@@ -6,6 +6,7 @@ import SingIn from './components/pages/singin/src/SingIn';
 import SingUp from './components/pages/singup/src/SingUp';
 import Userprofile from './components/pages/userprofile/src/Userprofile';
 import NotFound from "./components/pages/notfound/src/NotFound";
+import UpLoad from "./components/pages/upload/UpLoad";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route exact path='/' exact element={<Home />} />
                 <Route path='/singin' element={<SingIn/>} />
                 <Route path='/singup' element={<SingUp/>} />
+                <Route path='/upload' element={<UpLoad/>}/>
                 <Route path='/profile'>
                     <Route path=":id" element={<Userprofile/>}/>
                 </Route>

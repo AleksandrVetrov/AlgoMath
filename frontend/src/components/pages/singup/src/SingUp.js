@@ -40,13 +40,13 @@ class SingUp extends React.Component {
         if (this.checkData() && this.checkErrors()) {
             try {
                 const response = fetch("http://localhost:8080/api/auth/singup", {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        "username": this.state.username,
-                        "email": this.state.email,
-                        "password": this.state.password,
-                    })
-                }
+                        method: 'POST',
+                        body: JSON.stringify({
+                            "username": this.state.username,
+                            "email": this.state.email,
+                            "password": this.state.password,
+                        })
+                    }
                 );
                 console.log('Успех:', JSON.stringify(response));
                 this.setState({successMessage: "Успех"});
@@ -132,58 +132,59 @@ class SingUp extends React.Component {
 
     render() {
         let url = Lib.generateURL(10);
-        if(this.state.successMessage) return <Navigate to={'/profile/' + url}/>
+        if (this.state.successMessage) return <Navigate to={'/profile/' + url}/>
         return (
-            <div class="form">
+            <div>
                 <Helmet title="Регистрация"/>
-                <h2>Регистрация</h2>
-                <form onSubmit={this.submitCheckIn}>
-                    <input
-                        type="username"
-                        id="username"
-                        name="username"
-                        placeholder="Имя пользователя"
-                        value={this.state.username}
-                        onChange={this.onNameChange}
-                        onBlur={this.onNameBlur}
-                        autoComplete="off"
-                    />
-                    <Error errorMessage={this.state.usernameError}/>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Email"
-                        value={this.state.email}
-                        onChange={this.onEmailChange}
-                        onBlur={this.onEmailBlur}
-                    />
-                    <Error errorMessage={this.state.emailError}/>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Пароль"
-                        value={this.state.password}
-                        onChange={this.onPassChange}
-                        onBlur={this.onPassBlur}
-                    />
-                    <Error errorMessage={this.state.passwordError}/>
-                    <input
-                        type="password"
-                        id="passwordConf"
-                        name="passwordConf"
-                        placeholder="Подтвердите пароль"
-                        value={this.state.passwordConf}
-                        onChange={this.onPassConfChange}
-                        onBlur={this.onPassConfBlur}
-                    />
-                    <Error errorMessage={this.state.passwordConfError}/>
-                    <button type="submit">Отправить</button>
-                    <Success successMessage={this.state.successMessage}/>
-                </form>
-                <p>Уже есть аккаунт ? <a href='/singin'>Войти</a></p>
-
+                <div class="form">
+                    <h2>Регистрация</h2>
+                    <form onSubmit={this.submitCheckIn}>
+                        <input
+                            type="username"
+                            id="username"
+                            name="username"
+                            placeholder="Имя пользователя"
+                            value={this.state.username}
+                            onChange={this.onNameChange}
+                            onBlur={this.onNameBlur}
+                            autoComplete="off"
+                        />
+                        <Error errorMessage={this.state.usernameError}/>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Email"
+                            value={this.state.email}
+                            onChange={this.onEmailChange}
+                            onBlur={this.onEmailBlur}
+                        />
+                        <Error errorMessage={this.state.emailError}/>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Пароль"
+                            value={this.state.password}
+                            onChange={this.onPassChange}
+                            onBlur={this.onPassBlur}
+                        />
+                        <Error errorMessage={this.state.passwordError}/>
+                        <input
+                            type="password"
+                            id="passwordConf"
+                            name="passwordConf"
+                            placeholder="Подтвердите пароль"
+                            value={this.state.passwordConf}
+                            onChange={this.onPassConfChange}
+                            onBlur={this.onPassConfBlur}
+                        />
+                        <Error errorMessage={this.state.passwordConfError}/>
+                        <button type="submit">Отправить</button>
+                        <Success successMessage={this.state.successMessage}/>
+                    </form>
+                    <p>Уже есть аккаунт ? <a href='/singin'>Войти</a></p>
+                </div>
             </div>
         );
     }

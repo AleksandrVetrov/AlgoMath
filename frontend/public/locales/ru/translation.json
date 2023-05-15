@@ -1,0 +1,58 @@
+{
+  "header": {
+    "nav_profile": "Профиль",
+    "nav_about": "О нас"
+  },
+  "home": {
+    "home_title_one": "Лабораторные работы",
+    "home_order": "Заказать",
+    "home_text_one": "Быстро. Качественно. Легко.",
+    "home_title_two": "Консультации",
+    "home_text_two": "Часовая консультация со специалистом."
+  },
+  "singin": {
+    "form_title": "Вход в систему",
+    "username_placeholder": "Имя пользователя",
+    "password_placeholder": "Пароль",
+    "submit_button": "Войти",
+    "forgot_links": "Забыли",
+    "no_account": "Нет аккаунта",
+    "singup_link": "Зарегистрируйтесь"
+  },
+  "singup": {
+    "form_title": "Регистрация",
+    "email_placeholder": "Email",
+    "username_placeholder": "Имя пользователя",
+    "password_placeholder": "Пароль",
+    "confirm_password_placeholder": "Подтвердите пароль",
+    "submit_button": "Отправить",
+    "have_account": "Уже есть аккаунт",
+    "singin_link": "Войти"
+  },
+  "profile": {
+    "title": "Добро пожаловать",
+    "my_data_button": "Мои данные",
+    "my_orders_button": "Мои заказы",
+    "username_placeholder": "Имя пользователя",
+    "email_placeholder": "Email",
+    "vk_link_placeholder": "Ссылка на страницу VK",
+    "tg_link_placeholder": "Ссылка на Telegram",
+    "button": "Сохранить",
+    "changepass_link": "Изменить пароль"
+  },
+  "orders": {
+    "title": "Заказы",
+    "completed_button": "Завершенные",
+    "active_button": "Активные",
+    "active_title": "Активные заказы",
+    "completed_title": "Выполненные заказы"
+  },
+  "order": {
+    "id": "Заказ",
+    "title": "Название работы",
+    "price": "Цена работы"
+  },
+  "errors": {
+    "empty_error": "Поле не может быть пустым"
+  }
+}

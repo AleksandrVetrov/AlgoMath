@@ -1,0 +1,58 @@
+{
+  "header": {
+    "nav_profile": "Profile",
+    "nav_about": "About Us"
+  },
+  "home": {
+    "home_title_one": "Laboratory works",
+    "home_order": "Order",
+    "home_text_one": "Quickly. Qualitatively. Easy.",
+    "home_title_two": "Consultation",
+    "home_text_two": "One-hour consultation with a specialist."
+  },
+  "singin": {
+    "form_title": "SingIn",
+    "username_placeholder": "Username",
+    "password_placeholder": "Password",
+    "submit_button": "Submit",
+    "forgot_links": "Forgot",
+    "no_account": "No account",
+    "singup_link": "SingUp"
+  },
+  "singup": {
+    "form_title": "SingUp",
+    "email_placeholder": "Email",
+    "username_placeholder": "Username",
+    "password_placeholder": "Password",
+    "confirm_password_placeholder": "Confirm the password",
+    "submit_button": "Submit",
+    "have_account": "Already have an account",
+    "singin_link": "SingIn"
+  },
+  "profile": {
+    "title": "Welcome",
+    "my_data_button": "My data",
+    "my_orders_button": "My orders",
+    "username_placeholder": "Username",
+    "email_placeholder": "Email",
+    "vk_link_placeholder": "VK link",
+    "tg_link_placeholder": "Telegram link",
+    "button": "Save",
+    "changepass_link": "Change password"
+  },
+  "orders": {
+    "title": "Orders",
+    "completed_button": "Completed",
+    "active_button": "Active",
+    "active_title": "Active orders",
+    "completed_title": "Completed orders"
+  },
+  "order": {
+    "id": "Order",
+    "title": "Title",
+    "price": "Price"
+  },
+  "errors": {
+    "empty_error": "Can't be empty"
+  }
+}

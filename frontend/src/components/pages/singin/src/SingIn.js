@@ -8,6 +8,7 @@ import Error from "../../../universal/errors/src/Erros";
 import Success from "../../../universal/success/src/Success"
 import {Navigate} from "react-router-dom";
 import Lib from "../../../universal/lib/Lib"
+import {withTranslation,} from "react-i18next";
 
 class SingIn extends React.Component {
     constructor(props) {
@@ -89,13 +90,13 @@ class SingIn extends React.Component {
         return (
             <div class="form">
                 <Helmet title="Вход в систему"/>
-                <h2>Вход в систему</h2>
+                <h2>{this.props.t('singin.form_title')}</h2>
                 <form onSubmit={this.submitSingIn}>
                     <input
                         type="username"
                         id="username"
                         name="username"
-                        placeholder="Имя пользователя"
+                        placeholder={this.props.t('singin.username_placeholder')}
                         value={this.state.username}
                         onChange={this.onNameChange}
                         onBlur={this.onNameBlur}
@@ -106,17 +107,17 @@ class SingIn extends React.Component {
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="Пароль"
+                        placeholder={this.props.t('singin.password_placeholder')}
                         value={this.state.password}
                         onChange={this.onPassChange}
                         onBlur={this.onPassBlur}
                     />
                     <Error errorMessage={this.state.passwordError}/>
-                    <button type="submit">Войти</button>
+                    <button type="submit">{this.props.t('singin.submit_button')}</button>
                     <Success successMessage={this.state.successMessage}/>
                 </form>
-                <p>Забыли <a href='#'>Имя пользователя?</a><span>/</span><a href="#">Пароль?</a></p>
-                <p>Нет аккаунта? <a href='/singup'>Зарегистрируйтесь</a></p>
+                <p>{this.props.t('singin.forgot_links')} <a href='#'>{this.props.t('singin.username_placeholder')}?</a><span>/</span><a href="#">{this.props.t('singin.password_placeholder')}?</a></p>
+                <p>{this.props.t('singin.no_account')}? <a href='/singup'>{this.props.t('singin.singup_link')}</a></p>
             </div>
         );
     }
@@ -125,5 +126,5 @@ class SingIn extends React.Component {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<SingIn/>);
 
-export default SingIn;
+export default withTranslation()(SingIn);
 

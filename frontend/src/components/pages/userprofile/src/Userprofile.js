@@ -3,6 +3,7 @@ import Helmet from "react-helmet"
 import React from 'react';
 import validator from 'validator';
 import Orders from './Orders'
+import {useTranslation, withTranslation} from "react-i18next";
 
 class Userprofile extends React.Component {
     constructor(props) {
@@ -19,7 +20,6 @@ class Userprofile extends React.Component {
         this.onEmailChange = this.onEmailChange.bind(this);
         this.onVkLinkChange = this.onVkLinkChange.bind(this);
         this.onTgLinkChange = this.onTgLinkChange.bind(this);
-        this.handleSaveClick = this.handleSaveClick.bind(this);
         this.handleFormClick = this.handleFormClick.bind(this);
         this.handleOrdersClick = this.handleOrdersClick.bind(this);
     }
@@ -39,14 +39,6 @@ class Userprofile extends React.Component {
         this.setState({tgLink: event.target.value});
     }
 
-    handleSaveClick(event) {
-        if (!validator.isEmail(this.state.email)) {
-            alert("Вы не ввели почту")
-        } else {
-            alert("Успешно")
-        }
-    }
-
     handleOrdersClick(event) {
         this.setState({showOrders: true})
     }
@@ -61,8 +53,8 @@ class Userprofile extends React.Component {
             <div class="app">
                 <Helmet title="Профиль"/>
                 <div className="profile_buttons">
-                    <button id="data" onClick={this.handleFormClick}>Мои данные</button>
-                    <button id="orders" onClick={this.handleOrdersClick}>Мои заказы</button>
+                    <button id="data" onClick={this.handleFormClick}>{this.props.t('profile.my_data_button')}</button>
+                    <button id="orders" onClick={this.handleOrdersClick}>{this.props.t('profile.my_orders_button')}</button>
                 </div>
                 <Profile showOrders={showOrders}></Profile>
             </div>
@@ -80,15 +72,16 @@ function Profile(props) {
 }
 
 function ShowForm(props) {
+    const {t} = useTranslation();
     return (
         <div class="form">
-            <h2>Добро пожаловать!</h2>
-            <form onSubmit={props.handleSaveClick}>
+            <h2>{t('profile.title')}</h2>
+            <form>
                 <input
                     type="username"
                     id="username"
                     name="username"
-                    placeholder="Имя пользователя"
+                    placeholder={t('profile.username_placeholder')}
                     value={props.username}
                     onChange={props.onNameChange}
                     disabled="True"
@@ -97,7 +90,7 @@ function ShowForm(props) {
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder={t('profile.email_placeholder')}
                     value={props.email}
                     onChange={props.onEmailChange}
                 />
@@ -105,7 +98,7 @@ function ShowForm(props) {
                     type="text"
                     id="vklink"
                     name="vklink"
-                    placeholder="Ссылка на страницу VK"
+                    placeholder={t('profile.vk_link_placeholder')}
                     value={props.vkLink}
                     onChange={props.onVkLinkChange}
                 />
@@ -113,13 +106,13 @@ function ShowForm(props) {
                     type="text"
                     id="tglink"
                     name="tglink"
-                    placeholder="Ссылка на Telegram"
+                    placeholder={t('profile.tg_link_placeholder')}
                     value={props.tgLink}
                     onChange={props.onTgLinkChange}
                 />
-                <button type="submit">Сохранить</button>
+                <button type="submit">{t('profile.button')}</button>
             </form>
-            <a href='#'>Изменить пароль</a>
+            <a href='#'>{t('profile.changepass_link')}</a>
         </div>
     );
 }
@@ -129,5 +122,5 @@ function ShowOrders(props) {
 }
 
 
-export default Userprofile;
+export default withTranslation()(Userprofile);
 

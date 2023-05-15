@@ -12,11 +12,14 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
+    background: #333333;
+}
+
+.header_nav{
+
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #333333;
-
 }
 
 .logo_header img {
@@ -47,6 +50,10 @@ body {
 
 .nav-link:hover {
     color: rgba(245, 245, 247, 0.92);
+}
+
+.headers_button{
+
 }
 
 @media (max-width: 1440px) {

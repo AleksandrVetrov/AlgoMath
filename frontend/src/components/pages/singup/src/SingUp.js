@@ -9,6 +9,7 @@ import Error from "../../../universal/errors/src/Erros";
 import isEmpty from "validator/es/lib/isEmpty";
 import Success from "../../../universal/success/src/Success"
 import Lib from "../../../universal/lib/Lib";
+import {withTranslation,} from "react-i18next";
 
 class SingUp extends React.Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class SingUp extends React.Component {
     submitCheckIn(event) {
         if (this.checkData() && this.checkErrors()) {
             try {
-                const response = fetch("http://localhost:8080/api/auth/singup", {
+                const response = fetch("http://localhost/api/auth/singup", {
                         method: 'POST',
                         body: JSON.stringify({
                             "username": this.state.username,
@@ -137,13 +138,13 @@ class SingUp extends React.Component {
             <div>
                 <Helmet title="Регистрация"/>
                 <div class="form">
-                    <h2>Регистрация</h2>
+                    <h2>{this.props.t('singup.form_title')}</h2>
                     <form onSubmit={this.submitCheckIn}>
                         <input
                             type="username"
                             id="username"
                             name="username"
-                            placeholder="Имя пользователя"
+                            placeholder={this.props.t('singup.username_placeholder')}
                             value={this.state.username}
                             onChange={this.onNameChange}
                             onBlur={this.onNameBlur}
@@ -154,7 +155,7 @@ class SingUp extends React.Component {
                             type="email"
                             id="email"
                             name="email"
-                            placeholder="Email"
+                            placeholder={this.props.t('singup.email_placeholder')}
                             value={this.state.email}
                             onChange={this.onEmailChange}
                             onBlur={this.onEmailBlur}
@@ -164,7 +165,7 @@ class SingUp extends React.Component {
                             type="password"
                             id="password"
                             name="password"
-                            placeholder="Пароль"
+                            placeholder={this.props.t('singup.password_placeholder')}
                             value={this.state.password}
                             onChange={this.onPassChange}
                             onBlur={this.onPassBlur}
@@ -174,16 +175,16 @@ class SingUp extends React.Component {
                             type="password"
                             id="passwordConf"
                             name="passwordConf"
-                            placeholder="Подтвердите пароль"
+                            placeholder={this.props.t('singup.confirm_password_placeholder')}
                             value={this.state.passwordConf}
                             onChange={this.onPassConfChange}
                             onBlur={this.onPassConfBlur}
                         />
                         <Error errorMessage={this.state.passwordConfError}/>
-                        <button type="submit">Отправить</button>
+                        <button type="submit">{this.props.t('singup.submit_button')}</button>
                         <Success successMessage={this.state.successMessage}/>
                     </form>
-                    <p>Уже есть аккаунт ? <a href='/singin'>Войти</a></p>
+                    <p>{this.props.t('singup.have_account')} ? <a href='/singin'>{this.props.t('singup.singin_link')}</a></p>
                 </div>
             </div>
         );
@@ -194,5 +195,5 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<SingUp/>);
 
 
-export default SingUp;
+export default withTranslation()(SingUp);
 

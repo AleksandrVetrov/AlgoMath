@@ -1,5 +1,6 @@
 import React from 'react';
 import Order from "../../../universal/order/src/Order";
+import {useTranslation, withTranslation} from "react-i18next";
 
 
 class Orders extends React.Component {
@@ -60,10 +61,12 @@ class Orders extends React.Component {
         const activeOrders = this.state.activeOrders;
         return (
             <div class="orders">
-                <h2>Заказы</h2>
+                <h2>{this.props.t('orders.title')}</h2>
                 <div className="profile_buttons">
-                    <button id="active" onClick={this.handlerActiveOrdersClick}>Активные</button>
-                    <button id="completed" onClick={this.handlerCompletedOrdersClick}>Завершенные</button>
+                    <button id="active"
+                            onClick={this.handlerActiveOrdersClick}>{this.props.t('orders.active_button')}</button>
+                    <button id="completed"
+                            onClick={this.handlerCompletedOrdersClick}>{this.props.t('orders.completed_button')}</button>
                 </div>
                 <ShowOrders showCompleted={showCompleted} completedOrders={completedOrders}
                             activeOrders={activeOrders}></ShowOrders>
@@ -86,9 +89,10 @@ function ShowOrders(props) {
 
 function ShowCompleted(props) {
     const orders = props.orders;
+    const {t} = useTranslation();
     return (
         <div class="order">
-            <h3>Выполненные заказы</h3>
+            <h3>{t("orders.completed_title")}</h3>
             {orders.map((order, index) => (<Order key={index} order={order}/>))}
         </div>
     )
@@ -96,12 +100,13 @@ function ShowCompleted(props) {
 
 function ShowActive(props) {
     const orders = props.orders;
+    const {t} = useTranslation();
     return (
         <div class="order">
-            <h3>Активные заказы</h3>
+            <h3>{t("orders.active_title")}</h3>
             {orders.map((order, index) => (<Order key={index} order={order}/>))}
         </div>
     )
 }
 
-export default Orders;
+export default withTranslation()(Orders);

@@ -3,12 +3,12 @@ version: '3.7'
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
     ports:
       - "80:80"
   backend:
-    build: .
+    build: ..
     ports:
       - "8080:8080"
     depends_on:
@@ -21,21 +21,32 @@ services:
       MINIO_URL: http://minio:9000
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: vovan2045322@gmail.com
+      SPRING_MAIL_PASSWORD: fig777266Vam
     networks:
       - app-network
 
   db:
-    image: postgres
+    build: postgres
     environment:
       POSTGRES_DB: AlgoMathDB
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
+    restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgre" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   minio:
     image: bitnami/minio

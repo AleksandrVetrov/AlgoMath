@@ -38,7 +38,7 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
-    @NotBlank
+
     private boolean isEnabled;
 
     @ManyToMany(fetch = FetchType.LAZY)

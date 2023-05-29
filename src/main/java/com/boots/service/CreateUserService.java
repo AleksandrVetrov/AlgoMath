@@ -78,7 +78,7 @@ public class CreateUserService {
 
         if(token != null)
         {
-            User user = userRepository.findByUserEmailIgnoreCase(token.getUserEntity().getEmail());
+            User user = userRepository.findByEmail(token.getUserEntity().getEmail());
             user.setEnabled(true);
             userRepository.save(user);
             return ResponseEntity.ok("Email verified successfully!");

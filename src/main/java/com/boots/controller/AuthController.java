@@ -10,12 +10,13 @@ import com.boots.payload.response.MessageResponse;
 import com.boots.repository.RoleRepository;
 import com.boots.repository.UserRepository;
 import com.boots.service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-
+@AllArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -41,24 +42,6 @@ public class AuthController {
     final
     JwtUtils jwtUtils;
 
-    public AuthController(CreateUserService createUserService, RefreshTokenAuthService refreshTokenAuthService, SignOutService signOutService, AuthenticationManager authenticationManager,
-                          UserRepository userRepository,
-                          RoleRepository roleRepository,
-                          PasswordEncoder encoder,
-                          SignInAuthService signInAuthService, JwtUtils jwtUtils,
-                          RefreshTokenService refreshTokenService) {
-        this.createUserService = createUserService;
-        this.refreshTokenAuthService = refreshTokenAuthService;
-        this.signOutService = signOutService;
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.encoder = encoder;
-        this.signInAuthService = signInAuthService;
-        this.jwtUtils = jwtUtils;
-        this.refreshTokenService = refreshTokenService;
-    }
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return signInAuthService.authenticateUser(loginRequest);
@@ -79,8 +62,9 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         return refreshTokenAuthService.refreshToken(request);
     }
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
+
+    @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String confirmationToken) {
         return createUserService.confirmEmail(confirmationToken);
     }
 }

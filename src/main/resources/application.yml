@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/AlgoMathDB
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  mail:
+    host: ${SPRINGMAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+AlgoMath:
+  app:
+    jwtSecret: ${ALGOMATH_APP_JWTSECRET}
+    jwtCookieName: ${ALGOMATH_APP_JWTCOOKIENAME}
+    jwtExpirationMs: ${ALGOMATH_APP_JWTEXPIRATIONMS}
+    jwtRefreshCookieName: ${ALGOMATH_APP_JWTREFRESHCOOKIENAME}
+    jwtRefreshExpirationMs: ${ALGOMATH_APP_JWTREFRESHEXPIRATIONMS}
+
+minio:
+  bucket:
+    name: algomath
+  access:
+    key: minioadmin
+    secret: minioadmin
+  url: http://127.0.0.1:9000
+
+
+#For TEST
+#AlgoMath.app.jwtExpirationMs= 60000

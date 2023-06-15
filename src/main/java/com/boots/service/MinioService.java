@@ -71,7 +71,13 @@ public class MinioService {
 //            keyGen.init(256);
 //            ServerSideEncryptionCustomerKey ssec =
 //                    new ServerSideEncryptionCustomerKey(keyGen.generateKey());
-
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (!found) {
+                log.info("create bucket: [{}]", bucketName);
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            } else {
+                log.info("bucket '{}' already exists.", bucketName);
+            }
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(UUID.randomUUID().toString())

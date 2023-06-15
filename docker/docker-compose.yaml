@@ -21,10 +21,10 @@ services:
       MINIO_URL: http://minio:9000
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
-      SPRING_MAIL_HOST: smtp.gmail.com
-      SPRING_MAIL_PORT: 587
-      SPRING_MAIL_USERNAME: vovan2045322@gmail.com
-      SPRING_MAIL_PASSWORD: fig777266Vam
+      SPRING_MAIL_HOST: smtp.yandex.ru
+      SPRING_MAIL_PORT: 465
+      SPRING_MAIL_USERNAME: Fizi.1979@yandex.ru
+      SPRING_MAIL_PASSWORD: upgjammrkzmkxdxf
     networks:
       - app-network
 
@@ -42,7 +42,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgre" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5

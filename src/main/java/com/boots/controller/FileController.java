@@ -44,4 +44,3 @@ public class FileController {
                 .body(IOUtils.toByteArray(minioService.getObject(filename)));
     }
 }
-

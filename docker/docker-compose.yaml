@@ -60,6 +60,7 @@ services:
       - "9001:9001"
     networks:
       - app-network
+    command: ["mc", "mb", "--ignore-existing", "minio/algomath"]
 
 networks:
   app-network:

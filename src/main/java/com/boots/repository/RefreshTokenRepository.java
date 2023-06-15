@@ -1,5 +1,7 @@
 package com.boots.repository;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import com.boots.entity.RefreshToken;
@@ -15,4 +17,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
     @Modifying
     int deleteByUser(User user);
+
+    List<RefreshToken> findAllByExpiryDateBefore(Instant now);
 }

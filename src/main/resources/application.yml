@@ -22,6 +22,16 @@ spring:
     port: 465
     username: Fizi.1979@yandex.ru
     password: upgjammrkzmkxdxf
+  redis:
+    host: rt-redis
+    timeout: 2000
+  cache:
+    redis:
+      time-to-live: 180000
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 AlgoMath:
   app:
@@ -38,6 +48,7 @@ minio:
     key: minioadmin
     secret: minioadmin
   url: http://127.0.0.1:9000
+
 
 
 #For TEST

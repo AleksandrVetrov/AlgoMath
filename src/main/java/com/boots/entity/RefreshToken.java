@@ -1,17 +1,11 @@
 package com.boots.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
 import javax.persistence.*;
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity(name = "refreshtoken")
 public class RefreshToken {
     @Id

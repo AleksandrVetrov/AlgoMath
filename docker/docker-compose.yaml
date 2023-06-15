@@ -60,7 +60,15 @@ services:
       - "9001:9001"
     networks:
       - app-network
-    command: ["mc", "mb", "--ignore-existing", "minio/algomath"]
+    command: [ "mc", "mb", "--ignore-existing", "minio/algomath" ]
+
+
+  rt-redis:
+    container_name: rt-redis
+    image: redis:7
+    ports:
+      - "6379:6379"
+    restart: always
 
 networks:
   app-network:

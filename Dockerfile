@@ -3,7 +3,8 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 COPY src ./src
-RUN mvn package -DskipTests
+RUN mvn package -DskipTests && \
+    rm -rf ~/.m2/repository
 
 FROM openjdk:20
 WORKDIR /app
@@ -19,4 +20,4 @@ ENV MINIO_SECRET_KEY=minioadmin
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/usr/app/app.jar"]
+CMD ["java","-XX:+UseContainerSupport", "-XX:TieredStopAtLevel=1", "-jar", "/usr/app/app.jar"]

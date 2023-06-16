@@ -1,5 +1,5 @@
 # Начальный образ, на котором будут базироваться наши контейнеры
-FROM node:14-alpine AS build
+FROM node:alpine AS build
 
 # Установка рабочей директории внутри контейнера
 WORKDIR /app
@@ -8,13 +8,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Установка зависимостей
-RUN npm install
+RUN npm ci --only=production
 
 # Копирование исходных файлов React
 COPY . .
 
 # Сборка приложения
-RUN npm run build
+RUN npm run build -- --optimize-minimize
+
+# Очистка зависимостей и файлов после сборки
+RUN rm -rf node_modules && \
+    rm -f package*.json
 
 # Создание образа Nginx
 FROM nginx:latest

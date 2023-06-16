@@ -12,16 +12,27 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+    show-sql: false
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
   mail:
-    protocol: smtps
-    host: smtp.yandex.ru
-    port: 465
-    username: Fizi.1979@yandex.ru
-    password: upgjammrkzmkxdxf
+    host: localhost
+    port: 1025
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          starttls:
+            enable: false
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+
   redis:
     host: rt-redis
     timeout: 2000
@@ -32,6 +43,8 @@ spring:
     redis:
       repositories:
         enabled: false
+  flyway:
+    baseline-on-migrate: true
 
 AlgoMath:
   app:
@@ -48,7 +61,6 @@ minio:
     key: minioadmin
     secret: minioadmin
   url: http://127.0.0.1:9000
-
 
 
 #For TEST

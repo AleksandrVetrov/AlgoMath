@@ -19,6 +19,7 @@
   - Postgres 15
   - MinIO 8.5.2
   - JPA
+  - Flyway 9
   - Maven
 - **Frontend**
   - HTML/CSS

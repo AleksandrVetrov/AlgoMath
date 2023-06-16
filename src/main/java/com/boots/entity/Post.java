@@ -1,10 +1,13 @@
 package com.boots.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "posts")
 public class Post {
     @Id
@@ -24,45 +27,5 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostAttachment> attachments = new ArrayList<>();
-
-
-    public Post() {
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setAttachments(List<PostAttachment> attachments) {
-        this.attachments = attachments;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public List<PostAttachment> getAttachments() {
-        return attachments;
-    }
 
 }

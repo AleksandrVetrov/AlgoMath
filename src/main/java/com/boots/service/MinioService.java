@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -70,10 +71,16 @@ public class MinioService {
 //            keyGen.init(256);
 //            ServerSideEncryptionCustomerKey ssec =
 //                    new ServerSideEncryptionCustomerKey(keyGen.generateKey());
-
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (!found) {
+                log.info("create bucket: [{}]", bucketName);
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            } else {
+                log.info("bucket '{}' already exists.", bucketName);
+            }
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object(request.getFile().getOriginalFilename())
+                    .object(UUID.randomUUID().toString())
                     .stream(request.getFile().getInputStream(), request.getFile().getSize(), -1)
                     //.sse(ssec)
                     .build());
@@ -90,6 +97,6 @@ public class MinioService {
     }
 
     private String getPreSignedUrl(String filename) {
-        return "http://localhost:8080/file/".concat(filename);
+        return "http://localhost:8080/api/file/".concat(filename);
     }
 }

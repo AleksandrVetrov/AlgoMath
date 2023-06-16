@@ -3,12 +3,12 @@ version: '3.7'
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
     ports:
       - "80:80"
   backend:
-    build: .
+    build: ..
     ports:
       - "8080:8080"
     depends_on:
@@ -21,19 +21,32 @@ services:
       MINIO_URL: http://minio:9000
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
+      SPRING_MAIL_HOST: smtp.yandex.ru
+      SPRING_MAIL_PORT: 465
+      SPRING_MAIL_USERNAME: Fizi.1979@yandex.ru
+      SPRING_MAIL_PASSWORD: upgjammrkzmkxdxf
     networks:
       - app-network
 
   db:
-    image: postgres
+    build: postgres
     environment:
       POSTGRES_DB: AlgoMathDB
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
+    restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   minio:
     image: bitnami/minio
@@ -47,6 +60,20 @@ services:
       - "9001:9001"
     networks:
       - app-network
+    #command: [ "mc", "mb", "--ignore-existing", "minio/algomath" ]
+
+
+  rt-redis:
+    container_name: rt-redis
+    image: redis:7
+    ports:
+      - "6379:6379"
+    restart: always
+  mail:
+    image: maildev/maildev
+    ports:
+      - "1025:1025" # SMTP port
+      - "1080:1080"
 
 networks:
   app-network:

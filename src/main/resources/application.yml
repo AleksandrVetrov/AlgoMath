@@ -1,0 +1,67 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/AlgoMathDB
+    username: postgres
+    password: 123
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  mail:
+    host: localhost
+    port: 1025
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          starttls:
+            enable: false
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+
+  redis:
+    host: rt-redis
+    timeout: 2000
+  cache:
+    redis:
+      time-to-live: 180000
+  data:
+    redis:
+      repositories:
+        enabled: false
+  flyway:
+    baseline-on-migrate: true
+
+AlgoMath:
+  app:
+    jwtSecret: AlgoMath
+    jwtCookieName: AlgoMath
+    jwtExpirationMs: 86400000
+    jwtRefreshCookieName: algomath-jwt-refresh
+    jwtRefreshExpirationMs: 180000
+
+minio:
+  bucket:
+    name: algomath
+  access:
+    key: minioadmin
+    secret: minioadmin
+  url: http://127.0.0.1:9000
+
+
+#For TEST
+#AlgoMath.app.jwtExpirationMs= 60000

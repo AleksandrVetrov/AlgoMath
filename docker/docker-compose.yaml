@@ -60,7 +60,7 @@ services:
       - "9001:9001"
     networks:
       - app-network
-    command: [ "mc", "mb", "--ignore-existing", "minio/algomath" ]
+    #command: [ "mc", "mb", "--ignore-existing", "minio/algomath" ]
 
 
   rt-redis:
@@ -69,6 +69,11 @@ services:
     ports:
       - "6379:6379"
     restart: always
+  mail:
+    image: maildev/maildev
+    ports:
+      - "1025:1025" # SMTP port
+      - "1080:1080"
 
 networks:
   app-network:

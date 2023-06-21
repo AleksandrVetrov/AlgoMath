@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.boots.exception.CustomException;
 import com.boots.entity.User;
 import com.boots.service.UserDetailsImpl;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
+
 import static org.springframework.web.util.WebUtils.*;
 
 @Component
@@ -54,12 +56,11 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+        return ResponseCookie.from(jwtCookie, "").path("/api").build();
     }
 
     public ResponseCookie getCleanJwtRefreshCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api/auth/refreshtoken").build();
-        return cookie;
+        return ResponseCookie.from(jwtRefreshCookie, "").path("/api/auth/refreshtoken").build();
     }
 
     public String getUserNameFromJwtToken(String token) {
@@ -72,17 +73,20 @@ public class JwtUtils {
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
+            throw new CustomException("INVALID_JWT_SIGN", "Invalid JWT signature: {}");
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
+            throw new CustomException("INVALID_JWT_TOKEN", "Invalid JWT token: {}");
         } catch (ExpiredJwtException e) {
             logger.error("JWT token is expired: {}", e.getMessage());
+            throw new CustomException("JWT_EXPIRED", "JWT token is expired: {}");
         } catch (UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: {}", e.getMessage());
+            throw new CustomException("JWT_UNSUPPORTED", "JWT token is unsupported {}");
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
+            throw new CustomException("JWT_EMPTY", "JWT claims string is empty");
         }
-
-        return false;
     }
 
     public String generateTokenFromUsername(String username) {

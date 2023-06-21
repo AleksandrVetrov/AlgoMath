@@ -1,8 +1,8 @@
 package com.boots.service;
 
+import com.boots.exception.CustomException;
 import com.boots.entity.RefreshToken;
 import com.boots.entity.User;
-import com.boots.exception.TokenRefreshException;
 import com.boots.jwt.JwtUtils;
 import com.boots.payload.response.MessageResponse;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +32,7 @@ public class RefreshTokenAuthService {
 
         Optional<RefreshToken> optionalRefreshToken = refreshTokenService.findByToken(refreshToken);
         if (optionalRefreshToken.isEmpty()) {
-            throw new TokenRefreshException(refreshToken, "Refresh token is not in database!");
+            throw new CustomException(refreshToken, "Refresh token is not in database!");
         }
 
         RefreshToken refreshTokenObj = optionalRefreshToken.get();

@@ -1,9 +1,10 @@
 package com.boots.service;
 
+import com.boots.exception.CustomException;
 import com.boots.entity.RefreshToken;
-import com.boots.exception.TokenRefreshException;
 import com.boots.repository.RefreshTokenRepository;
 import com.boots.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,17 +19,13 @@ import java.util.UUID;
 
 @Service
 @CacheConfig(cacheNames = "RT")
+@RequiredArgsConstructor
 public class RefreshTokenService {
     @Value("${AlgoMath.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final UserRepository userRepository;
-
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.userRepository = userRepository;
-    }
 
     @Cacheable(key = "#token")
     public Optional<RefreshToken> findByToken(String token) {
@@ -46,11 +43,12 @@ public class RefreshTokenService {
         refreshToken = refreshTokenRepository.save(refreshToken);
         return refreshToken;
     }
+
     @CacheEvict(key = "#token")
     public void verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
-            throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
+            throw new CustomException(token.getToken(), "Refresh token was expired. Please make a new signing request");
         }
 
     }

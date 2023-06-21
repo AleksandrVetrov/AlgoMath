@@ -1,5 +1,6 @@
 package com.boots.service;
 
+import com.boots.exception.CustomException;
 import com.boots.entity.ConfirmationToken;
 import com.boots.entity.EnumRole;
 import com.boots.entity.Role;
@@ -29,11 +30,11 @@ public class CreateUserService {
 
     public void registerNewUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
+            throw new CustomException("USERNAME_EXISTS","Username is already in use");
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new IllegalArgumentException("Email is already in use");
+            throw new CustomException("EMAIL_EXISTS","Email is already in use");
         }
 
         User user = new User(
@@ -48,9 +49,7 @@ public class CreateUserService {
         if (strRoles == null) {
             roles.add(getRoleByName(String.valueOf(EnumRole.ROLE_USER)));
         } else {
-            strRoles.forEach(role -> {
-                roles.add(getRoleByName(role));
-            });
+            strRoles.forEach(role -> roles.add(getRoleByName(role)));
         }
 
         user.setRoles(roles);
@@ -79,7 +78,7 @@ public class CreateUserService {
 
     private Role getRoleByName(String roleName) {
         return roleRepository.findByName(EnumRole.valueOf(roleName))
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new CustomException("ROLE_NOT_FOUND","Role is not found."));
     }
 
 }

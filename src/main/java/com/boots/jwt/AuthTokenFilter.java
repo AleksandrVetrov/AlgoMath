@@ -1,5 +1,6 @@
 package com.boots.jwt;
 
+import com.boots.exception.CustomException;
 import com.boots.service.UserDetailsServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e.getMessage());
+            throw new CustomException("CANNOT_SET_USER_AUTH","Cannot set user authentication: {}");
         }
         filterChain.doFilter(request, response);
     }

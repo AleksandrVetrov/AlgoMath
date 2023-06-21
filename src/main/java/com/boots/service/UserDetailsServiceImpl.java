@@ -1,8 +1,8 @@
 package com.boots.service;
 
+import com.boots.exception.CustomException;
 import com.boots.entity.User;
 import com.boots.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomException("USER_NOT_FOUND","User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
     }

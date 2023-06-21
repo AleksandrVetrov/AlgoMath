@@ -1,5 +1,6 @@
 package com.boots.service;
 
+import com.boots.exception.CustomException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class EmailService {
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
-            throw new IllegalStateException("failed to send email");
+            throw new CustomException("FAILED_TO_SEND_EMAIL","failed to send email");
         }
     }
 }

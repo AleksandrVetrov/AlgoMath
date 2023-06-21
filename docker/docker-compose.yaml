@@ -65,7 +65,7 @@ services:
 
   rt-redis:
     container_name: rt-redis
-    image: redis:7
+    image: redis:7-alpine
     ports:
       - "6379:6379"
     restart: always

@@ -21,7 +21,7 @@ RUN rm -rf node_modules && \
     rm -f package*.json
 
 # Создание образа Nginx
-FROM nginx:latest
+FROM nginx:1.25.1-alpine
 
 # Копирование собранного React-приложения в образ Nginx
 COPY --from=build /app/build /usr/share/nginx/html

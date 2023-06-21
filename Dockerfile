@@ -1,4 +1,4 @@
-FROM maven:3.9.2-eclipse-temurin-11 AS build
+FROM maven:3.9.2-eclipse-temurin-11-alpine AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -6,7 +6,7 @@ COPY src ./src
 RUN mvn package -DskipTests && \
     rm -rf ~/.m2/repository
 
-FROM openjdk:20
+FROM eclipse-temurin:20-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar /usr/app/app.jar
 

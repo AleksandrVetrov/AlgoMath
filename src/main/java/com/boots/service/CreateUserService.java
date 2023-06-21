@@ -30,11 +30,11 @@ public class CreateUserService {
 
     public void registerNewUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            throw new CustomException("USERNAME_EXISTS","Username is already in use");
+            throw new CustomException("USERNAME_EXISTS", "Username is already in use");
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new CustomException("EMAIL_EXISTS","Email is already in use");
+            throw new CustomException("EMAIL_EXISTS", "Email is already in use");
         }
 
         User user = new User(
@@ -43,14 +43,8 @@ public class CreateUserService {
                 passwordEncoder.encode(signupRequest.getPassword())
         );
 
-        Set<String> strRoles = signupRequest.getRole();
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            roles.add(getRoleByName(String.valueOf(EnumRole.ROLE_USER)));
-        } else {
-            strRoles.forEach(role -> roles.add(getRoleByName(role)));
-        }
+        roles.add(getRoleByName(String.valueOf(EnumRole.ROLE_USER)));
 
         user.setRoles(roles);
         userRepository.save(user);
@@ -78,7 +72,7 @@ public class CreateUserService {
 
     private Role getRoleByName(String roleName) {
         return roleRepository.findByName(EnumRole.valueOf(roleName))
-                .orElseThrow(() -> new CustomException("ROLE_NOT_FOUND","Role is not found."));
+                .orElseThrow(() -> new CustomException("ROLE_NOT_FOUND", "Role is not found."));
     }
 
 }

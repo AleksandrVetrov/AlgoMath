@@ -65,6 +65,7 @@ public class MinioService {
     }
 
     public ResponseFile uploadFile(ResponseFile request) {
+        String uuid = UUID.randomUUID().toString();
         try {
 //            For HTTPS (На будущее)
 //            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -80,7 +81,7 @@ public class MinioService {
             }
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .object(UUID.randomUUID().toString())
+                    .object(uuid)
                     .stream(request.getFile().getInputStream(), request.getFile().getSize(), -1)
                     //.sse(ssec)
                     .build());
@@ -91,7 +92,7 @@ public class MinioService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .size(request.getFile().getSize())
-                .url(getPreSignedUrl(request.getFile().getOriginalFilename()))
+                .url(getPreSignedUrl(uuid))
                 .filename(request.getFile().getOriginalFilename())
                 .build();
     }
